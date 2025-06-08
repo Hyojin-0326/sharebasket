@@ -14,6 +14,7 @@ import GroupBuyDetail from "./pages/GroupBuyDetail";
 import Profile from "./pages/Profile";
 import Notifications from "./pages/Notifications";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (

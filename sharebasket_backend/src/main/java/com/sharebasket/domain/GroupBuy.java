@@ -26,4 +26,7 @@ public class GroupBuy {
     private int pricePerPerson;
 
     private LocalDateTime deadline;
+
+    @Column(nullable = false)
+    private String category;
 }

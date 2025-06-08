@@ -17,8 +17,10 @@ public class User {
     private Long id;
 
     private String email;
-
     private String password;
-
     private String name;
+
+    // private String avatar;      // ex) 'K'
+    // private int trustScore;     // ex) 87
+    // private int reviewCount;    // ex) 23
 }

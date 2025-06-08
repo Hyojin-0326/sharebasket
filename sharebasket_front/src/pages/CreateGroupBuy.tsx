@@ -82,7 +82,7 @@ const CreateGroupBuy = () => {
     const pricePerPerson = Math.floor(totalPrice / maxParticipants);
 
     try {
-      const res = await fetch("http://localhost:8080/api/groupbuy", {
+      const res = await fetch("http://localhost:8080/api/groupbuys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,61 +1,42 @@
+// src/pages/Home.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from 'react-router-dom';
 import { Bell, User, Search, Plus } from 'lucide-react';
 import { tagCategories } from '@/data/tagData';
-
-interface GroupBuy {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  imageUrl: string;
-}
-
-const groupBuys: GroupBuy[] = [
-  {
-    id: '1',
-    title: 'Nongshim Shin Ramyun 30 Pack',
-    description: 'The best ramyun you can find',
-    category: 'groceries',
-    imageUrl: 'https://m.media-amazon.com/images/I/71cJOt9JzYL._AC_UF1000,1000_QL80_.jpg'
-  },
-  {
-    id: '2',
-    title: 'Samdasoo 2L 24 Bottles',
-    description: 'The best water you can find',
-    category: 'daily-essentials',
-    imageUrl: 'https://www.amorepacificmall.com/web/product/big/202312/75988b09a19a000ef0456fd44a066c17.jpg'
-  },
-  {
-    id: '3',
-    title: 'abc',
-    description: 'The best ramyun you can find',
-    category: 'groceries',
-    imageUrl: 'https://m.media-amazon.com/images/I/71cJOt9JzYL._AC_UF1000,1000_QL80_.jpg'
-  },
-  {
-    id: '4',
-    title: 'def',
-    description: 'The best water you can find',
-    category: 'daily-essentials',
-    imageUrl: 'https://www.amorepacificmall.com/web/product/big/202312/75988b09a19a000ef0456fd44a066c17.jpg'
-  }
-];
+import { fetchGroupBuys, GroupBuy } from '@/api/groupbuyApi';
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const [groupBuys, setGroupBuys] = useState<GroupBuy[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const hasNewNotifications = true;
 
-  const filteredGroupBuys = groupBuys.filter((groupBuy) => {
-    const searchMatch = groupBuy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        groupBuy.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const categoryMatch = selectedCategory === null || groupBuy.category === selectedCategory;
-    return searchMatch && categoryMatch;
+  useEffect(() => {
+    fetchGroupBuys()
+      .then(data => setGroupBuys(data))
+      .catch(err => {
+        console.error(err);
+        setError('데이터 불러오는 중 에러남 ㅠ');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="p-4 text-center">로딩 중...</div>;
+  if (error)   return <div className="p-4 text-center text-red-500">{error}</div>;
+
+  const filtered = groupBuys.filter(item => {
+    const textMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase())
+                   || item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const catMatch  = !selectedCategory || item.category === selectedCategory;
+    return textMatch && catMatch;
   });
 
   return (
@@ -71,19 +52,17 @@ const Home = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Button 
-              variant="ghost" 
-              size="icon"
+              variant="ghost" size="icon"
               onClick={() => navigate('/notifications')}
               className="relative transition-all duration-300 hover:scale-110 hover:bg-purple-50"
             >
               <Bell className="h-5 w-5 text-purple-400" />
               {hasNewNotifications && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full animate-pulse" />
               )}
             </Button>
             <Button 
-              variant="ghost" 
-              size="icon"
+              variant="ghost" size="icon"
               onClick={() => navigate('/profile')}
               className="transition-all duration-300 hover:scale-110 hover:bg-purple-50"
             >
@@ -101,8 +80,8 @@ const Home = () => {
             type="text"
             placeholder="Search group buys..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-transparent transition-all duration-300"
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all duration-300"
           />
         </div>
 
@@ -121,7 +100,7 @@ const Home = () => {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 selectedCategory === null
                   ? 'bg-purple-400 text-white shadow-md'
                   : 'bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-400'
@@ -129,17 +108,17 @@ const Home = () => {
             >
               All
             </button>
-            {tagCategories.map((category) => (
+            {tagCategories.map(cat => (
               <button
-                key={category.value}
-                onClick={() => setSelectedCategory(category.value)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
-                  selectedCategory === category.value
+                key={cat.value}
+                onClick={() => setSelectedCategory(cat.value)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  selectedCategory === cat.value
                     ? 'bg-purple-400 text-white shadow-md'
                     : 'bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-400'
                 }`}
               >
-                {category.emoji} {category.label}
+                {cat.emoji} {cat.label}
               </button>
             ))}
           </div>
@@ -147,24 +126,20 @@ const Home = () => {
 
         {/* Group Buy List */}
         <div className="space-y-4">
-          {filteredGroupBuys.map((groupBuy) => (
-            <Card 
-              key={groupBuy.id} 
+          {filtered.map(gb => (
+            <Card
+              key={gb.id}
               className="cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg border-purple-100 hover:border-purple-200"
-              onClick={() => navigate(`/groupbuy/${groupBuy.id}`)}
+              onClick={() => navigate(`/groupbuy/${gb.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex items-center space-x-4">
                   <div className="w-16 h-16 rounded-lg overflow-hidden shadow-md">
-                    <img
-                      src={groupBuy.imageUrl}
-                      alt={groupBuy.title}
-                      className="w-full h-full object-cover"
-                    />
+                  <img src={`http://localhost:8080${gb.imageUrl}`} alt={gb.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-800">{groupBuy.title}</h3>
-                    <p className="text-gray-500">{groupBuy.description}</p>
+                    <h3 className="text-lg font-semibold text-gray-800">{gb.title}</h3>
+                    <p className="text-gray-500">{gb.description}</p>
                   </div>
                 </div>
               </CardContent>
