@@ -70,21 +70,21 @@ const GroupBuyDetail = () => {
       })
       .catch(err => {
         console.error(err);
-        toast({ title: '상세 불러오기 실패', description: err.message });
+        toast({ title: 'Failed to load details', description: err.message });
       })
       .finally(() => setLoading(false));
   }, [id]);
   
 
-  if (loading) return <div className="p-4 text-center">로딩 중...</div>;
-  if (!data)  return <div className="p-4 text-center text-red-500">데이터가 없습니다.</div>;
+  if (loading) return <div className="p-4 text-center">Loading...</div>;
+  if (!data)  return <div className="p-4 text-center text-red-500">No data available.</div>;
 
-  const handleJoin = () => toast({ title: "참여 신청 완료!", description: "공동구매에 참여하셨습니다." });
+  const handleJoin = () => toast({ title: "Joined successfully!", description: "You have joined the group." });
   const handleCopyPayment = () => {
     navigator.clipboard.writeText('카카오페이/토스: 010-1234-5678');
-    toast({ title: "복사 완료!", description: "결제 정보가 복사되었습니다." });
+    toast({ title: "Copied!", description: "Payment information copied." });
   };
-  const handleOpenToss = () => toast({ title: "토스 결제", description: "토스 결제 페이지 연동 예정." });
+  const handleOpenToss = () => toast({ title: "Toss Payment", description: "Toss payment integration coming soon." });
 
   return (
     <div className="min-h-screen bg-white">
@@ -94,7 +94,7 @@ const GroupBuyDetail = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-lg font-semibold">공구 상세</h1>
+          <h1 className="text-lg font-semibold">Details</h1>
           <div className="w-8" />
         </div>
       </div>
@@ -121,53 +121,58 @@ const GroupBuyDetail = () => {
 
               {/* 대표자 프로필 */}
               <div className="bg-gray-50 p-3 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">공구 대표자</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Organizer</h3>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    data.organizer ? 
-                    <Avatar className="bg-purple-500 text-white h-10 w-10 flex items-center justify-center text-lg font-semibold">
-                      {data.organizer.avatar}
-                    </Avatar> : <div></div>
-                    <div>
-                      <div className="font-medium">{data.organizer.name}</div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Star className="h-3 w-3 mr-1 text-yellow-400 fill-current" />
-                        <span>신뢰도 {data.organizer.trustScore}% · 후기 {data.organizer.reviewCount}개</span>
-                      </div>
-                    </div>
+                    {data.organizer ? (
+                      <>
+                        <Avatar className="bg-purple-500 text-white h-10 w-10 flex items-center justify-center text-lg font-semibold">
+                          {data.organizer.avatar}
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{data.organizer.name}</div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Star className="h-3 w-3 mr-1 text-yellow-400 fill-current" />
+                            <span>신뢰도 {data.organizer.trustScore}% · 후기 {data.organizer.reviewCount}개</span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-sm text-gray-400">Unable to load organizer info.</div>
+                    )}
                   </div>
                   <Button 
                     variant="outline" size="sm"
                     className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
                     onClick={() => setShowProfileModal(true)}
                   >
-                    프로필 보기
+                    View Profile
                   </Button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-b py-3">
+              <div className="flex items-data.pricePerPersoncenter justify-between border-t border-b py-3">
                 <div className="flex items-center text-sm text-gray-600">
                   <Clock className="h-4 w-4 mr-1" />
-                  <span>{data.timeRemaining} 남음</span>
+                  <span>{data.timeRemaining} remaining</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Users className="h-4 w-4 mr-1" />
-                  <span>{data.currentParticipants}/{data.targetParticipants}명</span>
+                  <span>{data.currentParticipants}/{data.targetParticipants}participants</span>
                 </div>
               </div>
 
               <div className="bg-purple-50 p-3 rounded-lg">
-                <div className="text-sm text-gray-600 mb-1">총 금액</div>
-                <div className="text-xl font-bold text-gray-800">{data.price.toLocaleString()}원</div>
+                <div className="text-sm text-gray-600 mb-1">Total Price</div>
+                <div className="text-xl font-bold text-gray-800">{data.price ? data.price.toLocaleString() : 0} KRW</div>
                 <div className="text-sm text-purple-500 mt-1">
-                  1인당 예상 금액: {data.pricePerPerson.toLocaleString()}원
+                  Estimated per person: {data.pricePerPerson ? data.pricePerPerson.toLocaleString(): 0} KRW
                 </div>
               </div>
 
               <div>
                 <h3 className="text-sm font-medium text-gray-700 mb-2">
-                  참여자 ({data.currentParticipants}명)
+                  participants ({data.currentParticipants})
                 </h3>
                 <div className="flex -space-x-2">
                   {data.participants.map(p => (
@@ -182,15 +187,15 @@ const GroupBuyDetail = () => {
                 className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded transition-all duration-200"
                 onClick={handleJoin}
               >
-                참여하기
+                Join
               </Button>
 
               <div className="flex space-x-2">
                 <Button variant="outline" className="flex-1 border-purple-200 text-purple-500" onClick={handleCopyPayment}>
-                  <Copy className="h-4 w-4 mr-1" /> 결제 정보 복사
+                  <Copy className="h-4 w-4 mr-1" /> Copy Payment Info
                 </Button>
                 <Button variant="outline" className="flex-1 border-purple-200 text-purple-500" onClick={handleOpenToss}>
-                  <CreditCard className="h-4 w-4 mr-1" /> 토스로 결제
+                  <CreditCard className="h-4 w-4 mr-1" /> Pay with Toss
                 </Button>
               </div>
             </CardContent>
@@ -199,7 +204,7 @@ const GroupBuyDetail = () => {
 
         {/* 댓글 섹션 */}
         <div className="mt-6 space-y-4">
-          <h2 className="text-lg font-semibold mb-3">댓글</h2>
+          <h2 className="text-lg font-semibold mb-3">Comments</h2>
           {data.comments.map(c => (
             <div key={c.id} className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-start justify-between">

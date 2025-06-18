@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,20 +15,28 @@ public class GroupBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String category;
+
 
     private String title;
 
     @Column(length = 1000)
     private String description;
     private String imageUrl;
- 
+
     private String location;
     private int maxParticipants;
     private int currentParticipants;
     private int pricePerPerson;
 
-    private LocalDateTime deadline;
+    private LocalDateTime deadline; // 
+    private int price;
 
-    @Column(nullable = false)
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "groupBuy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 }

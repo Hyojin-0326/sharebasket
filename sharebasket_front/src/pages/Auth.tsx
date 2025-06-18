@@ -29,6 +29,7 @@ const Auth = () => {
 
         const user = await res.json();
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("userId", user.id); 
         toast({ title: "Welcome!", description: "You have successfully signed in to ShareBasket." });
         navigate("/");
       } catch (err) {
@@ -50,7 +51,8 @@ const Auth = () => {
 
         const user = await res.json();
         localStorage.setItem("user", JSON.stringify(user));
-        toast({ title: "Account created!", description: "Welcome to the ShareBasket community." });
+        localStorage.setItem("userId", user.id); 
+       toast({ title: "Account created!", description: "Welcome to the ShareBasket community." });
         navigate("/Onboarding");
       } catch (err) {
         toast({ title: "Error", description: "Signup failed. Please try again.", variant: "destructive" });

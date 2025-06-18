@@ -32,14 +32,20 @@ public class GroupBuyController {
 
     @PostMapping
     public ResponseEntity<GroupBuyResponseDto> create(@RequestBody GroupBuyRequestDto dto) {
-    var saved = groupBuyService.createGroupBuy(dto);
-    var resDto = new GroupBuyResponseDto(
-        saved.getId(),
-        saved.getTitle(),
-        saved.getDescription(),
-        saved.getCategory(),
-        saved.getImageUrl()
-    );
-    return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
-}
+        var saved = groupBuyService.createGroupBuy(dto);
+
+        var resDto = new GroupBuyResponseDto();
+        resDto.setId(saved.getId());
+        resDto.setTitle(saved.getTitle());
+        resDto.setDescription(saved.getDescription());
+        resDto.setCategory(saved.getCategory());
+        resDto.setImageUrl(saved.getImageUrl());
+        resDto.setUserName(saved.getUser().getName());
+        resDto.setUserAvatar(saved.getUser().getAvatar());
+        resDto.setUserTrustScore(saved.getUser().getTrustScore());
+        resDto.setUserReviewCount(saved.getUser().getReviewCount());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
+    }
+
 }
