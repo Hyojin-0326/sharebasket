@@ -174,4 +174,18 @@ public class GroupBuyService {
 
         return groupBuyRepository.save(gb);
     }
+    public void addParticipant(Long groupBuyId, Long userId) {
+    GroupBuy gb = groupBuyRepository.findById(groupBuyId)
+        .orElseThrow(() -> new RuntimeException("공동구매 없음"));
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("유저 없음"));
+
+    // 중복 참여 방지
+    if (!gb.getParticipants().contains(user)) {
+        gb.getParticipants().add(user);
+        gb.setCurrentParticipants(gb.getParticipants().size());
+        groupBuyRepository.save(gb);
+    }
+}
 }

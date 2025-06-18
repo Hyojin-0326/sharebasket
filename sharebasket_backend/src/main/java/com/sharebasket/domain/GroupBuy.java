@@ -42,8 +42,13 @@ public class GroupBuy {
     @OneToMany(mappedBy = "groupBuy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "groupBuy")
-    private List<User> participants;
+    @ManyToMany
+    @JoinTable(
+        name = "group_buy_participants",
+        joinColumns = @JoinColumn(name = "group_buy_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> participants = new ArrayList<>();
 
 
     private int totalPrice;

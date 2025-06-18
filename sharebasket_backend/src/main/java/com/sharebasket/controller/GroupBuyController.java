@@ -2,6 +2,7 @@ package com.sharebasket.controller;
 
 import com.sharebasket.dto.GroupBuyRequestDto;
 import com.sharebasket.dto.GroupBuyResponseDto;
+import com.sharebasket.dto.JoinRequest;
 import com.sharebasket.service.GroupBuyService;
 import lombok.RequiredArgsConstructor;
 
@@ -47,5 +48,11 @@ public class GroupBuyController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
+
+    @PostMapping("/api/groupbuys/{id}/join")
+    public ResponseEntity<?> joinGroupBuy(@PathVariable Long id, @RequestBody JoinRequest request) {
+    groupBuyService.addParticipant(id, request.getUserId());
+    return ResponseEntity.ok().build();
+}
 
 }
