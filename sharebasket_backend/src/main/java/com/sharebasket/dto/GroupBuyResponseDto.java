@@ -2,6 +2,7 @@ package com.sharebasket.dto;
 import java.util.List;   
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -23,7 +24,10 @@ public class GroupBuyResponseDto {
 
     private int currentParticipants; // 참여자 정보 추가
     private int maxParticipants;
-        
 
-    
+    private String timeRemaining; //남은 시간 추가
+
+    private int totalPrice; // 가격 표시
+    private int pricePerPerson;
+        
 }

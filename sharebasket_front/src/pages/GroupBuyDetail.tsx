@@ -44,6 +44,7 @@ interface GroupBuyDetailData {
   organizer: Organizer;
   participants: Participant[];
   comments: Comment[];
+  totalPrice: number;
 }
 
 const GroupBuyDetail = () => {
@@ -164,10 +165,14 @@ const GroupBuyDetail = () => {
 
               <div className="bg-purple-50 p-3 rounded-lg">
                 <div className="text-sm text-gray-600 mb-1">Total Price</div>
-                <div className="text-xl font-bold text-gray-800">{data.price ? data.price.toLocaleString() : 0} KRW</div>
-                <div className="text-sm text-purple-500 mt-1">
-                  Estimated per person: {data.pricePerPerson ? data.pricePerPerson.toLocaleString(): 0} KRW
-                </div>
+                <div className="text-xl font-bold text-gray-800">{data.totalPrice ? data.totalPrice.toLocaleString() : 0} KRW</div>
+                  <div className="text-sm text-purple-500 mt-1">
+                    Estimated per person: {
+                      data.currentParticipants > 0
+                        ? Math.floor(data.totalPrice / data.currentParticipants).toLocaleString()
+                        : 0
+                    } KRW
+                  </div>
               </div>
 
               <div>

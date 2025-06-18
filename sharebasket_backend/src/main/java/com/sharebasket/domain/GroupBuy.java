@@ -45,4 +45,7 @@ public class GroupBuy {
     @OneToMany(mappedBy = "groupBuy")
     private List<User> participants;
 
+
+    private int totalPrice;
+
 }

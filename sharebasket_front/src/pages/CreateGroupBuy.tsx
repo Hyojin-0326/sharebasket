@@ -61,7 +61,7 @@ const CreateGroupBuy = () => {
     // 입력값 가져오기
     const title = (document.getElementById('productName') as HTMLInputElement).value;
     const description = (document.getElementById('description') as HTMLTextAreaElement).value;
-    const price = Number((document.getElementById('totalPrice') as HTMLInputElement).value);
+    const totalPrice = Number((document.getElementById('totalPrice') as HTMLInputElement).value);
     const maxParticipants = Number((document.getElementById('maxParticipants') as HTMLInputElement).value);
     const deadline = (document.getElementById('deadline') as HTMLInputElement).value;
 
@@ -71,7 +71,7 @@ const CreateGroupBuy = () => {
     }
 
     // 1인당 가격 계산
-    const pricePerPerson = Math.floor(price / maxParticipants);
+    const pricePerPerson = Math.floor(totalPrice / maxParticipants);
 
     // 로그인 체크
     const userId = localStorage.getItem("userId");
@@ -85,7 +85,7 @@ const CreateGroupBuy = () => {
       title,
       description,
       location,
-      price,               // 총 가격
+      totalPrice,               // 총 가격
       maxParticipants,
       pricePerPerson,      // 1인당 가격
       deadline,

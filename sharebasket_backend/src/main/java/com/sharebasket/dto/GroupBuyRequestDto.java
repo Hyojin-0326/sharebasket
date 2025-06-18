@@ -15,7 +15,7 @@ public class GroupBuyRequestDto {
     private String imageUrl;
     private String category;
     private Long userId;
-    private int price;
+    private int totalPrice;
 
     // private String tag;
 }

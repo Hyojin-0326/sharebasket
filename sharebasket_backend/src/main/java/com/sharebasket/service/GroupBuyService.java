@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class GroupBuyService {
@@ -38,8 +41,22 @@ public class GroupBuyService {
                 dto.setCategory(g.getCategory());
                 dto.setImageUrl(g.getImageUrl());
 
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime deadline = g.getDeadline();
+                String remaining = "";
+
+                if (deadline != null) {
+                    long hours = Duration.between(now, deadline).toHours();
+                    remaining = hours > 0 ? hours + " Remaining" : "Closed ";
+                } else {
+                    remaining = "Undefined";
+                }
+
+                dto.setTimeRemaining(remaining);
+
                 dto.setCurrentParticipants(g.getParticipants().size());
                 dto.setMaxParticipants(g.getMaxParticipants());
+
                 // organizer 설정
                 User u = g.getUser();
                 OrganizerDto organizerDto = new OrganizerDto(
@@ -62,6 +79,11 @@ public class GroupBuyService {
                 dto.setParticipants(participants);
                 dto.setCurrentParticipants(participants.size()); 
 
+
+                // 가격 표시
+                dto.setTotalPrice(g.getTotalPrice());
+                dto.setPricePerPerson(g.getPricePerPerson());
+
                 return dto;
             })
             .collect(Collectors.toList());
@@ -76,6 +98,20 @@ public class GroupBuyService {
                 dto.setDescription(g.getDescription());
                 dto.setCategory(g.getCategory());
                 dto.setImageUrl(g.getImageUrl());
+
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime deadline = g.getDeadline();
+                String remaining = "";
+
+                if (deadline != null) {
+                    long hours = Duration.between(now, deadline).toHours();
+                    remaining = hours > 0 ? hours + "   Hour" : "Closed";
+                } else {
+                    remaining = "Undefined";
+                }
+
+                dto.setTimeRemaining(remaining);
+
                 dto.setCurrentParticipants(g.getParticipants().size());
                 dto.setMaxParticipants(g.getMaxParticipants());
 
@@ -111,6 +147,10 @@ public class GroupBuyService {
                     return cdto;
                 }).collect(Collectors.toList()));
 
+                // 가격 표시
+                dto.setTotalPrice(g.getTotalPrice());
+                dto.setPricePerPerson(g.getPricePerPerson());
+
                 return dto;
             });
     }
@@ -122,7 +162,7 @@ public class GroupBuyService {
         gb.setCategory(dto.getCategory());
         gb.setImageUrl(dto.getImageUrl());
         gb.setLocation(dto.getLocation());
-        gb.setPrice(dto.getPrice());
+        gb.setTotalPrice(dto.getTotalPrice());
         gb.setMaxParticipants(dto.getMaxParticipants());
         gb.setCurrentParticipants(1);
         gb.setPricePerPerson(dto.getPricePerPerson());
