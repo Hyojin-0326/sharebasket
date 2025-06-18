@@ -80,7 +80,34 @@ const GroupBuyDetail = () => {
   if (loading) return <div className="p-4 text-center">Loading...</div>;
   if (!data)  return <div className="p-4 text-center text-red-500">No data available.</div>;
 
-  const handleJoin = () => toast({ title: "Joined successfully!", description: "You have joined the group." });
+  const handleJoin = async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    toast({ title: "Login required", description: "Please log in to join." });
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/api/groupbuys/${id}/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: Number(userId) }),
+    });
+
+    if (!res.ok) throw new Error("Failed to join the group buy.");
+
+    toast({ title: "Joined successfully!", description: "You have joined the group." });
+
+    // re-fetch updated group data
+    const updated = await fetch(`http://localhost:8080/api/groupbuys/${id}`);
+    const json = await updated.json();
+    json.imageUrl = `http://localhost:8080${json.imageUrl}`;
+    setData(json);
+  } catch (error) {
+    toast({ title: "Error occurred", description: String(error) });
+  }
+};
+
   const handleCopyPayment = () => {
     navigator.clipboard.writeText('카카오페이/토스: 010-1234-5678');
     toast({ title: "Copied!", description: "Payment information copied." });
