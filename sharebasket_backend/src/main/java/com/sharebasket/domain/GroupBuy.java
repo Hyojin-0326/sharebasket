@@ -25,12 +25,15 @@ public class GroupBuy {
     private String imageUrl;
 
     private String location;
-    private int maxParticipants;
+
     private int currentParticipants;
     private int pricePerPerson;
 
     private LocalDateTime deadline; // 
     private int price;
+
+    @Column(name = "max_participants")
+    private int maxParticipants;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,5 +41,8 @@ public class GroupBuy {
 
     @OneToMany(mappedBy = "groupBuy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "groupBuy")
+    private List<User> participants;
 
 }

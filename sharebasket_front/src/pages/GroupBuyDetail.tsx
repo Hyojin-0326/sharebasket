@@ -37,7 +37,7 @@ interface GroupBuyDetailData {
   imageUrl: string;
   price: number;
   currentParticipants: number;
-  targetParticipants: number;
+  maxParticipants: number;
   timeRemaining: string;
   pricePerPerson: number;
   location: string;
@@ -158,7 +158,7 @@ const GroupBuyDetail = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Users className="h-4 w-4 mr-1" />
-                  <span>{data.currentParticipants}/{data.targetParticipants}participants</span>
+                  <span>{data.currentParticipants}/{data.maxParticipants} participants</span>
                 </div>
               </div>
 

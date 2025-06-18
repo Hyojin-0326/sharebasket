@@ -19,6 +19,10 @@ const CreateGroupBuy = () => {
   // 위치(예시로 기본값 지정)
   const [location, setLocation] = useState('Seoul Gwanak-gu Sillim-dong');
 
+  // placeholder 바꾸기용
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+
   // 백에서 받은 이미지 URL을 저장
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
@@ -58,7 +62,7 @@ const CreateGroupBuy = () => {
     const title = (document.getElementById('productName') as HTMLInputElement).value;
     const description = (document.getElementById('description') as HTMLTextAreaElement).value;
     const price = Number((document.getElementById('totalPrice') as HTMLInputElement).value);
-    const maxParticipants = Number((document.getElementById('targetParticipants') as HTMLInputElement).value);
+    const maxParticipants = Number((document.getElementById('maxParticipants') as HTMLInputElement).value);
     const deadline = (document.getElementById('deadline') as HTMLInputElement).value;
 
     if (!imageUrl) {
@@ -138,30 +142,31 @@ const CreateGroupBuy = () => {
           <CardContent>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <Select value="" onValueChange={() => {}}>
+              <Select value={selectedState} onValueChange={(val) => setSelectedState(val)}>
                   <SelectTrigger className="border-purple-100 focus:ring-purple-300">
                     <SelectValue placeholder="Select State" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="seoul">Seoul</SelectItem>
-                    <SelectItem value="busan">Busan</SelectItem>
-                    <SelectItem value="incheon">Incheon</SelectItem>
+                    <SelectItem value="Seoul">Seoul</SelectItem>
+                    <SelectItem value="Busan">Busan</SelectItem>
+                    <SelectItem value="Incheon">Incheon</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value="" onValueChange={() => {}}>
+
+                <Select value={selectedDistrict} onValueChange={(val) => setSelectedDistrict(val)}>
                   <SelectTrigger className="border-purple-100 focus:ring-purple-300">
                     <SelectValue placeholder="Select District" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="gangnam">Gangnam-gu</SelectItem>
-                    <SelectItem value="gwanak">Gwanak-gu</SelectItem>
-                    <SelectItem value="mapo">Mapo-gu</SelectItem>
+                    <SelectItem value="Gangnam">Gangnam-gu</SelectItem>
+                    <SelectItem value="Gwanak">Gwanak-gu</SelectItem>
+                    <SelectItem value="Mapo">Mapo-gu</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <div className="text-sm text-gray-600">
-                Current setting: {location}
-              </div>
+                <div className="text-sm text-gray-600">
+                  Current setting: {`${selectedState}-si ${selectedDistrict}-gu`}
+                </div>
             </div>
           </CardContent>
         </Card>
@@ -250,14 +255,15 @@ const CreateGroupBuy = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="targetParticipants" className="text-gray-700">Target Participants</Label>
-                  <Input
-                    id="targetParticipants"
-                    type="number"
-                    placeholder="5"
-                    required
-                    className="border-purple-100 focus:ring-purple-300 focus:border-purple-300"
-                  />
+                    <Label htmlFor="maxParticipants" className="text-gray-700">Max Participants</Label>
+                    <Input
+                      id="maxParticipants"
+                      name="maxParticipants" 
+                      type="number"
+                      placeholder="5"
+                      required
+                      className="border-purple-100 focus:ring-purple-300 focus:border-purple-300"
+                    />
                 </div>
               </div>
 

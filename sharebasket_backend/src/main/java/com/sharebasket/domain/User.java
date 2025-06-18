@@ -23,4 +23,8 @@ public class User {
     private String avatar;      // ex) 'K'
     private int trustScore;     // ex) 87
     private int reviewCount;    // ex) 23
+
+    @ManyToOne
+    @JoinColumn(name = "group_buy_id")
+    private GroupBuy groupBuy;
 }

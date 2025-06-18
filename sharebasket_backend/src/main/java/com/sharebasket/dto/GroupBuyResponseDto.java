@@ -19,6 +19,11 @@ public class GroupBuyResponseDto {
     private int userReviewCount;
     private List<ParticipantDto> participants;
     private List<CommentDto> comments;
+    private OrganizerDto organizer;
+
+    private int currentParticipants; // 참여자 정보 추가
+    private int maxParticipants;
+        
 
     
 }
