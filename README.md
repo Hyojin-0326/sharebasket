@@ -52,23 +52,6 @@ Users can create or join nearby group-buy deals and automatically split costs ba
 - `GET /api/groupbuys/{id}` – Group buy details  
 - `POST /api/groupbuys/{id}/join` – Join group buy  
 
-## Project Structure
-
-.
-├─ frontend/
-│ └─ src/
-│ ├─ pages/
-│ ├─ components/
-│ └─ ...
-└─ backend/
-└─ src/main/java/
-├─ controller/
-├─ service/
-├─ dto/
-├─ entity/
-└─ repository/
-
-
 ## Key Engineering Challenges
 
 ### 1. Incorrect Price Storage
@@ -88,13 +71,14 @@ Users can create or join nearby group-buy deals and automatically split costs ba
 cd backend
 ./gradlew clean
 ./gradlew bootRun
+```
 
 ### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
-
+```
 ### Demo 
 
 https://github.com/user-attachments/assets/6e7f2a8e-666a-4a11-ac08-ce0b19617a0e
